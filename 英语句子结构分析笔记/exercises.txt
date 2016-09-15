@@ -26,62 +26,71 @@
 （7）They   made   him    a 	judge.
 	  主语   动词   宾语     	宾语补足语
 	  代词   动词   代词  冠词   名词
-	  
+	
+	
 2.指出下列的字是什么词类，说明它们在句中的含义。
 （1）cut。
-	<1>He cut his finger yesterday.
-	<2>There is another cut in the price of medicines.
-	<3>The sickle doesn't cut well.
-	<4>He is in a well-cut uniform.
+	<1>He cut his finger yesterday. 及物动词，“割”
+	<2>There is another cut in the price of medicines. 名词，“减价”
+	<3>The sickle doesn't cut well. 不及物动词，“割"
+	<4>He is in a well-cut uniform. 过去分词形式，”剪裁“
+	   他穿着一套剪裁精致的制服
 
 （2）study。
-	<1>The Chairman often received guests in his study.
-	<2>He made a study of folk songs.
-	<3>They are studying modern linguistics.
+	<1>The Chairman often received guests in his study.名词，“书房”
+	<2>He made a study of folk songs. 名词，“研究”
+	<3>They are studying modern linguistics. 动词，“学习”
 
 （3）ly。
-	<1>He pronounces English badly.
-	<2>He gave a friendly smile.
-	<3>Chinese Literature is a monthly magazine.
-	<4>This periodical is published fortnightly.
+	<1>He pronounces English badly. 副词，“坏”
+	<2>He gave a friendly smile. 形容词，“友好的”
+	<3>Chinese Literature is a monthly magazine.形容词，“每月一次的”
+	<4>This periodical is published fortnightly.副词，“每两周一次的”
+		这本期刊是双周刊。
 
 （4）right。
-	<1>It isn't the right answer to that question.
-	<2>He had no right to do that.
-	<3>The boy doesn't write with his right hand.
+	<1>It isn't the right answer to that question.形容词，“正确的”
+	<2>He had no right to do that.名词，“权利”
+	<3>The boy doesn't write with his right hand.形容词，“右边的”
 
 3.说明下面的字是什么词类，作什么句子成分。
 （1）park。
-	The children have gone to the park.
+	The children have gone to the park. 名词，作介词to的宾语
 （2）foreign。
-	We use foreign languages in our work.
-（3）Something。
-	Something is wrong with him.
-（4）steam engine。
-	James Watt invented the steam engine.
-（5）water。
-	She waters the garden every morning.
-（6）but。
-	She is my youngest girl but one.
+	We use foreign languages in our work.形容词，作名词languages的修饰语
+（3）steam engine。
+	James Watt invented the steam engine. engine为名词，作宾语；strem为名词，作engine的修饰语
+（4）but。
+	She is my youngest girl but one. 介词，它的宾语是one，意思是“除了......以外”
 （7）weather。
-	What's the weather forecast for tomorrow?
+	What's the weather forecast for tomorrow? 名词，作forecast的修饰语
 （8）rather difficult。
-	They consider English pronunciation rather difficult.
+	They consider English pronunciation rather difficult. rather为副词，作difficult的修饰语；difficult为形容词，作宾语补足语 
 	
 
 4.阅读故事，说明 打*号 的字是什么词类，在句中的作用如何。
-	The Wolf and the Fox wanted to eat the Rabbit, *but it wasn't easy to catch him. 
-One day,the Wolf said *to the Fox,"You go *home and lie in bed.I'll tell the Rabbit 
-that you are *dead. When he comes to look at you,you can jump *up and catch him." 
-"That's a good idea," said the Fox. He went home at once. The Wolf went to the *Rabbit's
-house and knocked at the door."Who is it?" asked the Rabbit. "It's the wolf. I've *come to
-tell you that the Fox is dead." *Then the Wolf went away.
-	The Rabbit went to the Fox's house. He looked in *through the window and saw the Fox
-lying in bed with his eyes closed. He thought,"Is the Fox *really dead,*or is he pretending
+	The Wolf and the Fox wanted to eat the Rabbit, *but 				 it wasn't easy to	catch him. 
+													连词，连接两个简单句
+One day,the Wolf said *to 					the Fox,"You go *home 				and lie in bed.I'll tell 
+					  介词，表示said的方向					副词，表示go的方向
+the Rabbit that you are *dead. 			When he comes to look at you,you can jump *up     and catch him." 
+						形容词，作表语											  副词，表示jump的方向
+"That's a good idea," said the Fox. He went home at once. The Wolf went to the *Rabbit's  house
+																				名词所有格，修饰名词house
+and knocked at the door."Who is it?" asked the Rabbit. "It's the wolf. *(I've come) to tell you that the
+																		  动词
+Fox is dead." *Then the Wolf went away.	
+			   副词，说明整个句子动作的时间
+	The Rabbit went to the Fox's house. He *(looked in through) the window and saw the Fox
+											不及物动词，in为副词，说明looked的方向（往内），through为介词，表示looked的方向（穿过）
+lying in bed with his eyes closed. He thought,"Is the Fox *really 	             dead, *or is he pretending
+															副词，表示dead的程度	   连词，连接两个简单句（或“分句”）
 to be dead? If he's not dead,he'll catch me when I go near him." So he said,"The Wolf says 
-that the Fox is dead.But he doesn't look like a dead fox. The mouth of a dead fox is always 
-*open." When the Fox heard *this,he thought,"I'll show him that I am dead." So he *opened his 
+that the Fox is dead.But he doesn't look like a dead fox. The mouth of a dead fox is *(always open)." When the Fox
+																					 always为副词，说明open的时间；open为形容词，作表语
+ heard *this,he thought,"I'll show him that I am dead." So he *opened his 
+		代词，作动词heard的宾语									动词
 month. The Rabbit knew *now that Fox wasn't dead,and he ran away immediately.
-
+						副词，说明动词knew的时间
 
 	

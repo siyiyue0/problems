@@ -80,11 +80,46 @@
 	E：Nobody came but Mr.Green.（but是介词，作“除了”讲）
 	E：He left but two hours ago.（but是副词，用于强调，作"仅仅”讲，一般用于较正式的文体中）
  
-（2）round
+
 	E:The table is round. （round是形容词，作主语补足语）
 	E：The earth moves round the sun.（round是介词，和名词sun一起构成介词短语）
 	E：Turn round.（round是副词，修饰动词）
 
-
-
+6.简单句的种类简介。
+（1）陈述句。
+（2）疑问句。
+	<1>一般疑问句。用yes或no回答的疑问句叫一般疑问句。
+		E:Are you Australian?
+	<2>特殊疑问句。就句子某个部分提问的疑问句叫特殊疑问句。特殊疑问句的句首用疑问词。
+		E:Who's there?
+	<3>选择疑问句。提供两种或两种以上情况问对方选择哪一种的疑问句叫选择疑问句。
+		E：Are you doing physics or history?你在学物理还是历史？
+		E:Do you want pork or beef?
+	<4>反意疑问句。对陈述句所提供的事实提出相反的疑问。
+		E:It's cold today,isn't it?
+		E:You didn't miss the last lecture,did you?
+（3）祈使句。主语是对方（you），一般省略。它的动词无词形变化，其否定结构一律在动词前加do not构成。
+	E：Look out!There comes the bus!
+	E:Be careful!
+	E:Let it be a lesson to us all.我们大家都从中吸取教训吧。
 	
+	祈使句有时也出现主语（you），这是为了加强语气。
+	E：You be quiet！
+	E:Don't you worry!别担心了！
+	
+	说话的对象是不同的人时，可用不同的主语。
+	E：You sweep the floor,Peter,and you clean the window,John.（彼得，你扫地板，约翰，你擦窗户）
+
+（4）感叹句。常用  ”how或what+被修饰部分“  的结构。被修饰的若是名词，前面用what；若是形容词、副词、动词，前面用how。
+	E：What a fascination story! （what修饰名词story）
+	E：How he snores!他鼾打的多厉害啊！ （how修饰动词snores，但动词不提前）
+	E：What nonsense he talked!他说得多荒唐！（what修饰名词nonsense）
+
+注意：感叹句的语序和陈述句相同，即主语在动词之前。疑问句的主语在动词之后，注意区别。
+	E：How old he is! （感叹句）
+	E：How old is he?（疑问句）
+
+注意：感叹句的主语和动词常被省略。
+	E：What an idea! （idea后面省略了主语和动词）
+	E：How funny！（funny后面省略了主语和动词）
+进度：P19
