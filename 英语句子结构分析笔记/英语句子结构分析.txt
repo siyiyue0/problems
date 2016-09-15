@@ -34,5 +34,38 @@
 	E:Honestly,I don't think much of his idea.说实在的，我觉得他的看法不怎么样。 （honestly修饰整个句子）
 	E：Unfortunately,he fell off his motorbike and broke his leg.(unfortunately修饰整个句子)
 	
-	进度P11
+3.词类和句子成分的关系。
+（1）名词（可单独充当句子成分）。
+	<1>主语
+	<2>宾语
+	<3>主语补足语。 E：Air is matter.
+	<4>宾语补足语。 E：Everybody called him Uncle Tom。（Uncle Tom是宾语补足语）
+	<5>作介词的宾语，构成介词词组  E:He met an old freend of his in town.（作介词in的宾语，构成介词词组）
+	<6>作名词的修饰语（即定语） E：Wang's son is a university student.（Wang's为名词所有格，与名词university均作名词的修饰语）
+
+（2）代词（可单独充当句子成分）。
+	<1>主语。 E：He said little at the session. （he作主语，little作宾语）
+	<2>宾语。 E：He said little at the session. （he作主语，little作宾语）
+	<3>主语补足语。 E:Whose scarf is it?——It is hers. （whose作名词的修饰语，hers作主语补足语）
+	<4>宾语补足语。 （这个是自己加的，书中没有说过代词可以做宾语补足语）
+	<5>介词的宾语。构成介词词组（这个是自己加的，书中没有说过代词可以做介词的宾语）
+	<6>名词的修饰语（即定语）。 E：Our classroom is very big.  E:Whose scarf is it?——It is hers. （whose作名词的修饰语，hers作主语补足语）
+	
+（3）形容词（可单独充当句子成分）。
+	<1>主语补足语。 
+	<2>宾语补足语。 E:Have you got everything ready for the trip? （ready为宾语补足语）
+	<3>名词的修饰语。
+	
+（4）副词（可单独充当句子成分）。
+	<1>主语补足语。 E：Class is over.
+	<2>动词的修饰语。 E：Has his father come back yet? （back yet作动词的修饰语）
+	<3>形容词的修饰语。 E：Chemistry is a very important science.
+	
+（5）动词（可单独充当句子成分）。
+（6）介词（不能单独充当句子成分）。需与其宾语一起使用，构成介词词组。
+（7）连词（不能单独充当句子成分）。用于连接单词、词组或句子。
+（8）冠词（不能单独充当句子成分）。仅用于说明有关的名词是泛指的还是特指的。
+
+
+
 	
