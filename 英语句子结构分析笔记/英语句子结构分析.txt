@@ -67,5 +67,24 @@
 （8）冠词（不能单独充当句子成分）。仅用于说明有关的名词是泛指的还是特指的。
 
 
+4.动词的其他形式。
+3种形式在句子中都不作动词，通常以短语形式出现。
+（1）to do（动词不定式）
+（2）doing （动词的现在分词 或 动名词）
+（3）done （动词的过去分词）
+这里只是提到有这种现象，以后会详细讲。
+
+5.同一个词用作不同的词类。这里仅给出一些例子，英语中一词多词类的现象非常多。
+（1）but
+	E:He is good at speaking but poor at writing.（but是连词，做“但是”讲）
+	E：Nobody came but Mr.Green.（but是介词，作“除了”讲）
+	E：He left but two hours ago.（but是副词，用于强调，作"仅仅”讲，一般用于较正式的文体中）
+ 
+（2）round
+	E:The table is round. （round是形容词，作主语补足语）
+	E：The earth moves round the sun.（round是介词，和名词sun一起构成介词短语）
+	E：Turn round.（round是副词，修饰动词）
+
+
 
 	
