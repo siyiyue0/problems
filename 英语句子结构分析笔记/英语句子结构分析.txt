@@ -13,6 +13,7 @@
 	<1>名词  E:Mr.Dick is an engineer.
 	<2>代词  E:We are many,they are few.我们人多，他们人少
 	<3>形容词 E:Tom felt hungry.
+	<4>副词 E：The class is over.
 （4）宾语。表示动作的对象，是主语动作的承受者。有宾语的动词叫及物动词，宾语一般在及物动词之后。
 	<1>由名词、代词或相当于名词的其他词类担任。
 	此外，英语介词后面的词也算宾语，如：
@@ -22,6 +23,7 @@
 	<1>名词	E:They named the baby Peter. (Peter作宾语补足语)
 	<2>代词
 	<3>形容词	E:We always find her happy and gay.（形容词作宾语补足语）
+	<4>副词     E：Father kept him in and doing his lessions.父亲把他关在家里做作业（副词in作宾语补足语）
 （6）修饰语。是句子的次要成分。
 	<1>定语。名词或代词的修饰语称为定语。常放在所修饰的名词前。
 		<<1>>名词 His father is a police office.（his是代词作修饰语，police是名词作修饰语）
@@ -58,8 +60,10 @@
 	
 （4）副词（可单独充当句子成分）。
 	<1>主语补足语。 E：Class is over.
+	<2>宾语补足语。 E：Father kept him in and doing his lessions.
 	<2>动词的修饰语。 E：Has his father come back yet? （back yet作动词的修饰语）
 	<3>形容词的修饰语。 E：Chemistry is a very important science.
+	<4>副词的修饰语。 E：She runs very fast.
 	
 （5）动词（可单独充当句子成分）。
 （6）介词（不能单独充当句子成分）。需与其宾语一起使用，构成介词词组。
