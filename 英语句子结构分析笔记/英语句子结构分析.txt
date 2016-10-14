@@ -78,18 +78,7 @@
 （3）done （动词的过去分词）
 这里只是提到有这种现象，以后会详细讲。
 
-5.同一个词用作不同的词类。这里仅给出一些例子，英语中一词多词类的现象非常多。
-（1）but
-	E:He is good at speaking but poor at writing.（but是连词，做“但是”讲）
-	E：Nobody came but Mr.Green.（but是介词，作“除了”讲）
-	E：He left but two hours ago.（but是副词，用于强调，作"仅仅”讲，一般用于较正式的文体中）
- 
-
-	E:The table is round. （round是形容词，作主语补足语）
-	E：The earth moves round the sun.（round是介词，和名词sun一起构成介词短语）
-	E：Turn round.（round是副词，修饰动词）
-
-6.简单句的种类简介。
+5.简单句的种类简介。
 （1）陈述句。
 （2）疑问句。
 	<1>一般疑问句。用yes或no回答的疑问句叫一般疑问句。
@@ -126,4 +115,89 @@
 注意：感叹句的主语和动词常被省略。
 	E：What an idea! （idea后面省略了主语和动词）
 	E：How funny！（funny后面省略了主语和动词）
-进度：P19
+
+6.连系动词有哪些？
+英语除to be外，常用的连系动词还有fell,seem,become，get,turn,remain,look,grow等。	
+	
+7.简单句的5个基本句型。
+（1）主语+连系动词+表语。 E：Mike is diligent.
+
+（2）主语+不及物动词。 E:His houses burned.
+
+（3）主语+及物动词+宾语。E：Tom missed the plane。
+
+（4）主语+及物动词+间接宾语+直接宾语。 
+	E1：Jane sang us a song.
+	<1>一般来说，直接宾语是动作的承受者，对于动词意义的完整是不可缺少的，间接宾语一般指“人”，有时可以不用。
+		如E1中如果去掉间接宾语 us ，动词的仍然完整，但若去掉直接宾语song，意思就不通了。
+	<2>间接宾语一般放在直接宾语之前。什么情况下会把间接宾语放在直接宾语之后？
+		<<1>>间接宾语比较长，则放直接宾语后面
+			E2：The landlady offered a cup of tea to each of the three tired lodgers.
+		<<2>>为强调间接宾语，则放直接宾语后面
+			E3:Give this ticket to Wang,not to Li.
+		<<3>>直接宾语是代词，则总是把间接宾语放直接宾语后面
+			E4:Give it to me.
+		
+（5）主语+及物动词+宾语+宾语补足语。E：The boy set the bird free.
+
+8.知：不及物动词后面若要跟名词，先要用一个介词。
+E：The express from Shanghai arrived at platform one.（不及物动词arrive后面先用了介词at，才能再跟名词station）
+
+9.短语。
+意义上联成一体但不构成句子的一组词，叫做短语。
+（1）介词短语。
+由介词加名词或相当于名词的其他词类构成。
+注意：介词短语不可以做主语。如果放在句首,很可能是这个句子倒装了.
+例如：In front of our house stands a tall tree .“In front of our house”是介词短语,
+虽然放在句首,但不是作主语,主语是 a tall tree ,这句话也可以为：A tall tree stands In front of our house.
+	<1>作表语
+	E：These youngsters are always in high spirits.
+	<2>作宾语补足语
+	E:The next morning,he found himself in hospital.
+	<3>作定语（需后置）
+	E:I can seldom find time for reading.作定语，说明是什么时间。
+	E:The apples on the tree look nice.
+	<4>作状语
+	E：The flight was put off due to bad weather.（due to为介词，和bad weather一起构成介词短语，修饰
+	   动词was put off ，表示原因）
+	E:Harry usually cycles to school.哈利通常骑自行车上学（作表示方向的状语）
+
+	进度P34
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
