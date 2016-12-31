@@ -1,0 +1,1014 @@
+知识点总结：
+（1）为什么devices.js中的query方法里：
+  yield put({
+        type: 'updateQueryKey',
+        payload: { pageNumber:1, field: '', keyword: '', ...payload}
+      });
+  的payload要写 pageNumber:1, field: '', keyword: '' 这3个？
+  
+  答：
+  使用这个的本意是：访问这个方法的人，如果传过来的数据中不提供 pageNumber，则认为他想访问第1页的数据，
+					同理对于field和keyword，也是认为他不需要过滤。
+
+  我们看Device.js传给DeviceList的属性中的 onPageChange方法是这样的：
+    const deviceListProps = {
+		loading, list, totalRow, pageNumber,
+		onPageChange(pageNumber) {
+		  dispatch({
+			type: 'devices/query',
+			payload: { field, keyword, pageNumber },
+		  });
+		},
+	...略
+	};
+  可见，每次onPageChange，都把 state中的field和keyword传过去，同时把提供给onPageChange方法的参数pageNumber也传过去
+  
+  updateQueryKey如下：
+  updateQueryKey(state, action) {
+      return { ...state, ...action.payload };
+  },
+  这样的话，调用query方法的人，如果提供了pageNumber,key,keyword，则这个updateQueryKey方法执行完之后，其他state不变，
+  但改变了pageNumber,key,keyword；但是如果调用query方法的人，没有提供pageNumber/key/keyword，则updateQueryKey执行完之后
+  ，改变pageNumber为1/key为""/keyword为"" 
+ 
+（2）当点击一个“编辑”按钮的时候，发生什么事情？
+	Device.js传给DeviceList.js的onEditItem方法如下：
+	onEditItem(currentItem) {
+	  dispatch({
+		type: 'devices/editDevice',
+		payload: currentItem,
+	  });
+	},
+	
+  devices.js的effects中的 editDevice方法如下：
+  *editDevice({ payload }, { call, put }) {
+	  yield put({
+		type: 'updateCurrentItem',
+		payload: {
+		  currentItem: { ...payload },
+		}
+	  });
+	  const { status_code, data } = yield call(poolsQuery, { user_id: payload.user_id });
+	  if (status_code === 0 && data) {
+		yield put({
+		  type: 'queryPoolsSuccess',
+		  payload: {
+			poolList: data.list,
+		  }
+		});
+	  }
+	  yield put({
+		type: 'showModal',
+		payload: {
+		  modalType: 'update',
+		}
+	  });
+  }
+  
+  reducers如下：
+    updateCurrentItem(state, action) {
+      return { ...state, ...action.payload };
+    },
+	queryPoolsSuccess(state, action) {
+      return { ...state, ...action.payload };
+    },
+	showModal(state, action) {
+      return { ...state, ...action.payload, modalVisible: true };
+    }
+	
+	可见，先是更新currentItem状态，然后查询该用户的塘口，当查询成功，就更新poolList状态，最后更新modal状态，显示这个编辑Modal
+	
+（3）由（2）可知，此时poolList状态已经加载了pool列表了，来看看 DeviceModal.js中关于生成代表所有可选塘口的<Select>组件的代码：
+	const renderPoolList = poolList.map(item =>
+      <Option value={item.id} key={item.id}>{item.name}</Option>
+    );
+    const poolListDefaultValue = (list, id) => {
+      const newList = list.filter(pool => pool.id === id);
+      if (newList != null && newList.length > 0) {
+        return newList[0].id;
+      }
+    };
+	
+	return (
+      <Modal {...modalOpts}>
+        <Form horizontal>
+          <FormItem label="塘口" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('pool_id', {
+            initialValue: poolListDefaultValue(poolList, item.pool_id),
+            rules: [
+              { required: true,
+                message: '塘口未选择'
+              },
+            ]
+          })(
+            <Select>
+              {renderPoolList}
+            </Select>
+          )}
+          </FormItem>
+		  ...略
+		</Form>
+	  </Modal>
+  
+    #待？为什么initialValue要用 poolListDefaultValue(poolList, item.pool_id) 而不直接用 item.pool_id
+
+ 
+ 
+
+1.Device.js如下：
+import React from 'react';
+import { connect } from 'dva';
+import styles from './Devices.css';
+import DeviceList from '../components/Devices/DeviceList';
+import DeviceSearch from '../components/Devices/DeviceSearch';
+import DeviceModal from '../components/Devices/DeviceModal';
+import UserSelect from '../components/Common/UserSelect';
+
+function Devices({dispatch, devices, profile}) {
+  const {
+    loading, list, totalRow, pageNumber, currentItem,
+    field, keyword,
+    modalVisible, modalType,
+    userSelectModalVisible,
+    userList, userPageNumber, userTotalRow, userPageSize,
+    poolList,
+  } = devices;
+
+  const deviceListProps = {
+    loading, list, totalRow, pageNumber,
+    onPageChange(pageNumber) {
+      dispatch({
+        type: 'devices/query',
+        payload: { field, keyword, pageNumber },
+      });
+    },
+    onDeleteItem(id) {
+      dispatch({
+        type: 'devices/delete',
+        payload: id,
+      });
+    },
+    onEditItem(currentItem) {
+      dispatch({
+        type: 'devices/editDevice',
+        payload: currentItem,
+      });
+    },
+  };
+
+  const deviceModalProps = {
+    item: currentItem,
+    poolList,
+    type: modalType,
+    visible: modalVisible,
+    onOk(data) {
+      dispatch({
+        type: `devices/${modalType}`,
+        payload: data,
+      });
+    },
+    onCancel() {
+      dispatch({
+        type: 'devices/hideModal',
+      });
+    },
+  };
+
+  const deviceSearchProps = {
+    field, keyword,
+    onSearch(fieldsValue) {
+      dispatch({
+        type: 'devices/query',
+        payload: { ...fieldsValue, pageNumber: 1 },
+      });
+    },
+    onAdd() {
+      dispatch({
+        type: 'devices/createDevice',
+      });
+    },
+  };
+
+  const userSelectProps = {
+    visible: userSelectModalVisible,
+    list: userList,
+    totalRow: userTotalRow,
+    pageNumber: userPageNumber,
+    pageSize: userPageSize,
+    onPageChange(pageNumber) {
+      dispatch({
+        type: 'devices/usersQuery',
+        payload: { field, keyword, pageNumber },
+      });
+    },
+    onSelect(data) {
+      dispatch({
+        type: 'devices/userSelected',
+        payload: {
+          user_id: data.id,
+          user_name: data.name,
+        }
+      });
+    },
+    onCancel() {
+      dispatch({
+        type: 'devices/hideUserSelectModal',
+      });
+    }
+  };
+
+  // 解决 Form.create initialValue 的问题
+    // 每次创建一个全新的组件, 而不做diff
+    // 如果你使用了redux, 请移步 http://react-component.github.io/form/examples/redux.html
+  const DeviceModalGen = () =>
+    <DeviceModal {...deviceModalProps} />;
+
+
+  return (
+    <div className={styles.normal}>
+      <DeviceSearch {...deviceSearchProps} />
+      <DeviceList {...deviceListProps} />
+      <DeviceModalGen />
+      <UserSelect {...userSelectProps} />
+    </div>
+  );
+}
+
+function mapStateToProps({devices, profile}) {
+  return {devices, profile};
+}
+
+export default connect(mapStateToProps)(Devices);
+
+2. DeviceList.js如下：
+import React, { PropTypes } from 'react';
+import { Table, Popconfirm, Pagination, Tag } from 'antd';
+import styles from './DeviceList.css';
+
+function DeviceList({ loading, list, totalRow, pageNumber, onPageChange, onEditItem, onDeleteItem }) {
+  const columns = [{
+    title: '设备名称',
+    dataIndex: 'name',
+    key: 'name'
+  }, {
+    title: '所有者',
+    dataIndex: 'user_name',
+    key: 'user_name'
+  }, {
+    title: '告警开关',
+    dataIndex: 'latest_data.is_alert',
+    key: 'latest_data.is_alert',
+    render: (text, record) => {
+      if(record.latest_data && record.latest_data.is_alert === 1) {
+        return (<Tag color="#87d068">是</Tag>);
+      } else if(record.latest_data && record.latest_data.is_alert === 0) {
+        return (<Tag>否</Tag>);
+      }
+    }
+  }, {
+    title: '在线',
+    dataIndex: 'is_active',
+    key: 'is_active',
+    render: (text, record) => {
+      if(record.is_active === 1){
+        return (<Tag color="#87d068">是</Tag>);
+      } else if(record.is_active === 0) {
+        return (<Tag>否</Tag>);
+      }
+    }
+  }, {
+    title: '温度',
+    dataIndex: 'latest_data.temperature',
+    key: 'temperature'
+  }, {
+    title: '溶氧',
+    dataIndex: 'latest_data.oxygen',
+    key: 'latest_data.oxygen'
+  }, {
+    title: '塘口',
+    dataIndex: 'pool_name',
+    key: 'pool_name'
+  }, {
+    title: '注册日期',
+    dataIndex: 'register_date',
+    key: 'register_date'
+  }, {
+    title: '更新时间',
+    dataIndex: 'latest_data.record_date',
+    key: 'latest_data.record_date'
+  }, {
+    title: '操作',
+    key: 'operation',
+    render: (text, record) => (
+      <p>
+        <a onClick={() => onEditItem(record)}>编辑</a>
+        &nbsp;
+        <Popconfirm title="确定要删除吗？" onConfirm={() => onDeleteItem(record.id)}>
+          <a>删除</a>
+        </Popconfirm>
+      </p>
+    )
+  }];
+
+  return (
+    <div>
+      <Table columns={columns} loading={loading} dataSource={list} rowKey={record => record.id} pagination={false} />
+      <Pagination className="ant-table-pagination" total={totalRow} current={pageNumber} pageSize={50} onChange={onPageChange}/>
+    </div>
+  );
+}
+
+DeviceList.propTypes = {
+  loading: PropTypes.any,
+  list: PropTypes.array,
+  totalRow:PropTypes.any,
+  pageNumber: PropTypes.any,
+  onPageChange: PropTypes.func,
+  onEditItem: PropTypes.func,
+  onDeleteItem: PropTypes.func,
+};
+
+export default DeviceList;
+
+（1）DeviceList需要传入： ｛ loading, list, totalRow, pageNumber, onPageChange, onEditItem, onDeleteItem ｝
+（2）需要进行列定义。 在列定义中，“操作”这里如下：注意和其他列相比，少了dataIndex，但多了render（因为不是仅仅简单地返回文本）
+	 {
+		title: '操作',
+		key: 'operation',
+		render: (text, record) => (
+		  <p>
+			<a onClick={() => onEditItem(record)}>编辑</a>
+			&nbsp;
+			<Popconfirm title="确定要删除吗？" onConfirm={() => onDeleteItem(record.id)}>
+			  <a>删除</a>
+			</Popconfirm>
+		  </p>
+		)
+	}
+（3）return一个
+		<div>
+		  <Table columns={columns} loading={loading} dataSource={list} rowKey={record => record.id} pagination={false} />
+		  <Pagination className="ant-table-pagination" total={totalRow} current={pageNumber} pageSize={50} onChange={onPageChange}/>
+		</div>
+		注意rowKey的写法
+（4）最后还要定义下prop的类型：
+		DeviceList.propTypes = {
+		  loading: PropTypes.any,
+		  list: PropTypes.array,
+		  totalRow:PropTypes.any,
+		  pageNumber: PropTypes.any,
+		  onPageChange: PropTypes.func,
+		  onEditItem: PropTypes.func,
+		  onDeleteItem: PropTypes.func,
+		};		
+		
+		
+3.DeviceModal.js如下：
+import React, { PropTypes } from 'react';
+import { Form, Input, Modal, Switch, Button, Icon, Select } from 'antd';
+
+const FormItem = Form.Item;
+const Option = Select.Option;
+
+const formItemLayout = {
+  labelCol: {
+    span: 8
+  },
+  wrapperCol: {
+    span: 10,
+  },
+};
+
+const DeviceModal = ({
+    visible,
+    item = {},
+    onOk, onCancel, onSelectUser,
+    type,
+    poolList = [],
+    form: { getFieldDecorator, validateFields, getFieldsValue }}) => {
+
+    function handleOk() {
+      validateFields((errors) => {
+        if (errors) {
+          return;
+        }
+        const data = { ...getFieldsValue(), key: item.key };
+        if(data.is_active){
+          data.is_active = 1;
+        } else {
+          data.is_active = 0;
+        }
+        onOk(data);
+      });
+    }
+
+    const title = type === 'create'?'添加设备':'修改设备';
+
+    const modalOpts = {
+      title: title,
+      visible,
+      onOk: handleOk,
+      onCancel,
+    };
+
+    const renderPoolList = poolList.map(item =>
+      <Option value={item.id} key={item.id}>{item.name}</Option>
+    );
+    const poolListDefaultValue = (list, id) => {
+      const newList = list.filter(pool => pool.id === id);
+      if (newList != null && newList.length > 0) {
+        return newList[0].id;
+      }
+    };
+
+    return (
+      <Modal {...modalOpts}>
+        <Form horizontal>
+          <FormItem label="用户" {...formItemLayout}>
+          {
+            getFieldDecorator('user_id', {
+              initialValue: item.user_id
+            })(
+              <Input type='hidden' />
+            )
+          }
+          {
+            getFieldDecorator('user_name', {
+              initialValue: item.user_name
+            })(
+              <Input type='text' disabled={true} />
+            )
+          }
+          </FormItem>
+          <FormItem label="塘口" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('pool_id', {
+            initialValue: poolListDefaultValue(poolList, item.pool_id),
+            rules: [
+              { required: true,
+                message: '塘口未选择'
+              },
+            ]
+          })(
+            <Select>
+              {renderPoolList}
+            </Select>
+          )}
+          </FormItem>
+          <FormItem label="名称" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('name', {
+              initialValue: item.name,
+              rules: [
+                { required: true,
+                  message: '名称未填写'
+                },
+              ]
+            })(
+              <Input type="text" />
+            )}
+          </FormItem>
+          <FormItem label="序列号" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('sn', {
+              initialValue: item.sn,
+              rules: [
+                {
+                  required: true,
+                  message: '序列号未填写'
+                }
+              ]
+            })(
+              <Input type='text' />
+            )}
+          </FormItem>
+          <FormItem label="IMEI" hasFeedback {...formItemLayout}>
+            {
+              getFieldDecorator('imei', {
+                initialValue: item.imei
+              })(
+                <Input type="text" />
+              )
+            }
+          </FormItem>
+          <FormItem  label="在线"  {...formItemLayout} >
+            {getFieldDecorator('is_active', {
+                initialValue: item.is_active,
+                valuePropName: 'checked'
+              })(
+              <Switch />
+            )}
+          </FormItem>
+          <FormItem label="备注" hasFeedback {...formItemLayout}>
+            {
+              getFieldDecorator('notes', {
+                initialValue: item.notes
+              })(
+                <Input type='textarea' rows={4} />
+              )
+            }
+          </FormItem>
+        </Form>
+      </Modal>
+    );
+};
+
+DeviceModal.propTypes = {
+  visible: PropTypes.any,
+  form: PropTypes.object,
+  item: PropTypes.object,
+  onOk: PropTypes.func,
+  onCancel: PropTypes.func,
+  onSelectUser: PropTypes.func,
+};
+
+export default Form.create()(DeviceModal);
+
+
+4.DeviceSearch.js如下：
+import React, { PropTypes } from 'react';
+import { Form, Input, Button, Select } from 'antd';
+import styles from './DeviceSearch.css';
+
+const DeviceSearch = ({
+  field, keyword,
+  onSearch,
+  onAdd,
+  form: {
+    getFieldDecorator,
+    validateFields,
+    getFieldsValue,
+  }
+  }) => {
+    function handleSubmit(e) {
+      e.preventDefault();
+      validateFields((errors) => {
+        if (!!errors) {
+          return;
+        }
+        onSearch(getFieldsValue());
+      });
+    }
+
+  return (
+    <div className={styles.normal}>
+      <div className={styles.search}>
+        <Form inline onSubmit={handleSubmit}>
+          <Form.Item>
+            {getFieldDecorator('field', {
+              initialValue: field || 'name',
+            })(
+              <Select style={{width:80}}>
+                <Select.Option value="name">名称</Select.Option>
+                <Select.Option value="pool_name">塘口名称</Select.Option>
+                <Select.Option value="user_name">所有者</Select.Option>
+              </Select>
+            )}
+          </Form.Item>
+          <Form.Item hasFeedback>
+            {getFieldDecorator('keyword', {
+              initialValue: keyword || '',
+            })(
+              <Input type="text" />
+            )}
+          </Form.Item>
+          <Button style={{ marginRight: '10px' }} type="primary" size="large" htmlType="submit">搜索</Button>
+        </Form>
+      </div>
+      <div className={styles.create}>
+        <Button type="ghost" onClick={onAdd} size="large">添加</Button>
+      </div>
+    </div>
+  );
+};
+
+DeviceSearch.propTypes = {
+  form: PropTypes.object.isRequired,
+  onSearch: PropTypes.func,
+  onAdd: PropTypes.func,
+  field: PropTypes.string,
+  keyword: PropTypes.string,
+};
+
+export default Form.create()(DeviceSearch);
+
+
+5.devices.js如下：
+import { create, remove, update, query } from '../services/devices';
+import { query as usersQuery } from '../services/users';
+import { query as poolsQuery } from '../services/pools';
+import { parse } from 'qs';
+import { notification } from 'antd';
+
+export default {
+  namespace: 'devices',
+
+  state: {
+    message: '',
+    loading: false,
+    list: [],
+    totalRow: null,
+    pageNumber: 1,
+    currentItem: {},
+    field: '',
+    keyword: '',
+    modalVisible: false,
+    modalType: 'create',
+    userSelectModalVisible: false,
+    userList: [],
+    userPageNumber: 1,
+    userPageSize: 60,
+    userTotalRow: null,
+    poolList: [],
+  },
+
+  subscriptions: {
+    setup({ dispatch, history }) {
+      history.listen(location => {
+          if(location.pathname === '/devices'){
+            dispatch({
+              type: 'query',
+              payload: location.query
+            });
+          }
+      });
+    }
+  },
+
+  effects: {
+    *query({payload}, {call, put}) {
+      yield put({type: 'showLoading'});
+      yield put({
+        type: 'updateQueryKey',
+        payload: { pageNumber:1, field: '', keyword: '', ...payload}
+      });
+      const { status_code, data } = yield call(query, parse(payload));
+      if(status_code === 0 && data) {
+        yield put({
+          type: 'querySuccess',
+          payload: {
+            list: data.list,
+            totalRow: data.totalRow,
+            pageNumber: data.pageNumber
+          }
+        });
+      }
+    },
+    *'delete'({ payload }, { call, put }) {
+      yield put({ type: 'showLoading' });
+      const { message, status_code } = yield call(remove, { id: payload });
+      if (status_code === 0) {
+        notification['success']({message: '成功删除设备！'});
+        yield put({
+          type: 'deleteSuccess',
+          payload,
+        });
+      }
+      else {
+        notification['error']({message: '删除失败!', description: message});
+        yield put({
+          type: 'deleteFailure',
+          payload,
+        });
+      }
+    },
+    *create({ payload }, { select, call, put }) {
+      yield put({ type: 'hideModal' });
+      yield put({ type: 'showLoading' });
+      const pool = yield select(({ devices }) => devices.poolList.filter(item => item.id === payload.pool_id));
+      const { status_code, data } = yield call(create, payload);
+      if (status_code === 0  && data) {
+        notification['success']({message: '成功添加设备！'});
+        yield put({
+          type: 'createSuccess',
+          payload: { ...data, user_name: payload.user_name, pool_name: pool[0].name },
+        });
+      }
+    },
+    *update({ payload }, { select, call, put }) {
+      yield put({ type: 'hideModal' });
+      yield put({ type: 'showLoading' });
+      const id = yield select(({ devices }) => devices.currentItem.id);
+      const pool = yield select(({ devices }) => devices.poolList.filter(item => item.id === payload.pool_id));
+      const newDevice = { ...payload, id, pool_name: pool[0].name };
+      const { data, status_code } = yield call(update, newDevice);
+      if (status_code === 0) {
+        notification['success']({message: '成功更新设备！'});
+        yield put({
+          type: 'updateSuccess',
+          payload: newDevice,
+        });
+      }
+    },
+    *createDevice({ payload }, { call, put }) {
+      yield put({ type: 'showUserSelectModal' });
+      yield put({ type: 'usersQuery' });
+    },
+    *usersQuery({ payload }, { select, call, put }) {
+      const pageSize = yield select(({ devices }) => devices.userPageSize);
+      const param = { ...payload, pageSize };
+      const { data, status_code } = yield call(usersQuery, parse(param));
+      if (status_code === 0 && data) {
+        yield put({
+          type: 'queryUsersSuccess',
+          payload: {
+            userList: data.list,
+            userTotalRow: data.totalRow,
+            userPageNumber: data.pageNumber,
+          }
+        });
+      }
+    },
+    *editDevice({ payload }, { call, put }) {
+      yield put({
+        type: 'updateCurrentItem',
+        payload: {
+          currentItem: { ...payload },
+        }
+      });
+      const { status_code, data } = yield call(poolsQuery, { user_id: payload.user_id });
+      if (status_code === 0 && data) {
+        yield put({
+          type: 'queryPoolsSuccess',
+          payload: {
+            poolList: data.list,
+          }
+        });
+      }
+      yield put({
+        type: 'showModal',
+        payload: {
+          modalType: 'update',
+        }
+      });
+    },
+    *userSelected({ payload }, { call, put }) {
+      yield put({ type: 'hideUserSelectModal' });
+      yield put({
+        type: 'updateCurrentItem',
+        payload: {
+          currentItem: { ...payload },
+        }
+      });
+      const { status_code, data } = yield call(poolsQuery, { user_id: payload.user_id });
+      if (status_code === 0 && data) {
+        yield put({
+          type: 'queryPoolsSuccess',
+          payload: {
+            poolList: data.list,
+          }
+        });
+      }
+      yield put({
+        type: 'showModal',
+        payload: {
+          modalType: 'create',
+        }
+      });
+    },
+  },
+
+  reducers: {
+    showLoading(state) {
+      return { ...state, loading: true };
+    },
+    createSuccess(state, action) {
+      state.list.push(action.payload);
+      return { ...state, loading: false };
+    },
+    deleteSuccess(state, action) {
+      const id = action.payload;
+      const newList = state.list.filter(device => device.id !== id);
+      return { ...state, list: newList, loading: false };
+    },
+    deleteFailure(state) {
+      return { ...state, loading: false };
+    },
+    updateSuccess(state, action) {
+      const updateDevice = action.payload;
+      const newList = state.list.map(device => {
+        if (device.id === updateDevice.id) {
+          return { ...device, ...updateDevice };
+        }
+        return device;
+      });
+      return { ...state, list: newList, loading: false };
+    },
+    querySuccess(state, action) {
+      return { ...state, ...action.payload, loading: false };
+    },
+    showModal(state, action) {
+      return { ...state, ...action.payload, modalVisible: true };
+    },
+    hideModal(state) {
+      return { ...state, modalVisible: false };
+    },
+    updateQueryKey(state, action) {
+      return { ...state, ...action.payload };
+    },
+    showUserSelectModal(state, action) {
+      return { ...state, userSelectModalVisible: true };
+    },
+    hideUserSelectModal(state, action) {
+      return { ...state, userSelectModalVisible: false };
+    },
+    updateCurrentItem(state, action) {
+      return { ...state, ...action.payload };
+    },
+    queryUsersSuccess(state, action) {
+      return { ...state, ...action.payload };
+    },
+    queryPoolsSuccess(state, action) {
+      return { ...state, ...action.payload };
+    }
+  }
+};	
+
+
+6.devices的service如下：
+import request from './request.js';
+import qs from 'qs';
+
+export async function query(params) {
+  return request(`/api/admin/device?${qs.stringify(params)}`);
+}
+
+export async function create(params) {
+  return request('/api/admin/device', {
+    method: 'post',
+    body: JSON.stringify(params)
+  });
+}
+
+export async function update(params) {
+  return request('/api/admin/device/' + params.id, {
+    method: 'put',
+    body: JSON.stringify(params)
+  });
+}
+
+export async function remove(params) {
+  return request('/api/admin/device/' + params.id, {
+    method: 'delete'
+  });
+}
+
+
+5.DeviceModal.js如下：
+import React, { PropTypes } from 'react';
+import { Form, Input, Modal, Switch, Button, Icon, Select } from 'antd';
+
+const FormItem = Form.Item;
+const Option = Select.Option;
+
+const formItemLayout = {
+  labelCol: {
+    span: 8
+  },
+  wrapperCol: {
+    span: 10,
+  },
+};
+
+const DeviceModal = ({
+    visible,
+    item = {},
+    onOk, onCancel, onSelectUser,
+    type,
+    poolList = [],
+    form: { getFieldDecorator, validateFields, getFieldsValue }}) => {
+
+    function handleOk() {
+      validateFields((errors) => {
+        if (errors) {
+          return;
+        }
+        const data = { ...getFieldsValue(), key: item.key };
+        if(data.is_active){
+          data.is_active = 1;
+        } else {
+          data.is_active = 0;
+        }
+        onOk(data);
+      });
+    }
+
+    const title = type === 'create'?'添加设备':'修改设备';
+
+    const modalOpts = {
+      title: title,
+      visible,
+      onOk: handleOk,
+      onCancel,
+    };
+
+    const renderPoolList = poolList.map(item =>
+      <Option value={item.id} key={item.id}>{item.name}</Option>
+    );
+    const poolListDefaultValue = (list, id) => {
+      const newList = list.filter(pool => pool.id === id);
+      if (newList != null && newList.length > 0) {
+        return newList[0].id;
+      }
+    };
+
+    return (
+      <Modal {...modalOpts}>
+        <Form horizontal>
+          <FormItem label="用户" {...formItemLayout}>
+          {
+            getFieldDecorator('user_id', {
+              initialValue: item.user_id
+            })(
+              <Input type='hidden' />
+            )
+          }
+          {
+            getFieldDecorator('user_name', {
+              initialValue: item.user_name
+            })(
+              <Input type='text' disabled={true} />
+            )
+          }
+          </FormItem>
+          <FormItem label="塘口" hasFeedback {...formItemLayout}>
+          {getFieldDecorator('pool_id', {
+            initialValue: poolListDefaultValue(poolList, item.pool_id),
+            rules: [
+              { required: true,
+                message: '塘口未选择'
+              },
+            ]
+          })(
+            <Select>
+              {renderPoolList}
+            </Select>
+          )}
+          </FormItem>
+          <FormItem label="名称" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('name', {
+              initialValue: item.name,
+              rules: [
+                { required: true,
+                  message: '名称未填写'
+                },
+              ]
+            })(
+              <Input type="text" />
+            )}
+          </FormItem>
+          <FormItem label="序列号" hasFeedback {...formItemLayout}>
+            {getFieldDecorator('sn', {
+              initialValue: item.sn,
+              rules: [
+                {
+                  required: true,
+                  message: '序列号未填写'
+                }
+              ]
+            })(
+              <Input type='text' />
+            )}
+          </FormItem>
+          <FormItem label="IMEI" hasFeedback {...formItemLayout}>
+            {
+              getFieldDecorator('imei', {
+                initialValue: item.imei
+              })(
+                <Input type="text" />
+              )
+            }
+          </FormItem>
+          <FormItem  label="在线"  {...formItemLayout} >
+            {getFieldDecorator('is_active', {
+                initialValue: item.is_active,
+                valuePropName: 'checked'
+              })(
+              <Switch />
+            )}
+          </FormItem>
+          <FormItem label="备注" hasFeedback {...formItemLayout}>
+            {
+              getFieldDecorator('notes', {
+                initialValue: item.notes
+              })(
+                <Input type='textarea' rows={4} />
+              )
+            }
+          </FormItem>
+        </Form>
+      </Modal>
+    );
+};
+
+DeviceModal.propTypes = {
+  visible: PropTypes.any,
+  form: PropTypes.object,
+  item: PropTypes.object,
+  onOk: PropTypes.func,
+  onCancel: PropTypes.func,
+  onSelectUser: PropTypes.func,
+};
+
+export default Form.create()(DeviceModal);
+
+
+
+  
