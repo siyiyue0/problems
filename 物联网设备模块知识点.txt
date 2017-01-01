@@ -31,7 +31,174 @@
   但改变了pageNumber,key,keyword；但是如果调用query方法的人，没有提供pageNumber/key/keyword，则updateQueryKey执行完之后
   ，改变pageNumber为1/key为""/keyword为"" 
  
-（2）当点击一个“编辑”按钮的时候，发生什么事情？
+（2）当点击一个“添加”按钮的时候，发生什么事情？
+	看Device.js的deviceSearchProps中对onAdd的定义：
+	const deviceSearchProps = {
+		field, keyword,
+		onSearch(fieldsValue) {
+		  dispatch({
+			type: 'devices/query',
+			payload: { ...fieldsValue, pageNumber: 1 },
+		  });
+		},
+		onAdd() {
+		  dispatch({
+			type: 'devices/createDevice',
+		  });
+		},
+    };
+	
+	看其return方法,增加了<UserSelect>组件:
+	return (
+		<div className={styles.normal}>
+		  <DeviceSearch {...deviceSearchProps} />
+		  <DeviceList {...deviceListProps} />
+		  <DeviceModalGen />
+		  <UserSelect {...userSelectProps} />
+		</div>
+    );
+	
+	看其传给<UserSelect>组件的属性：
+	const userSelectProps = {
+    visible: userSelectModalVisible,
+    list: userList,
+    totalRow: userTotalRow,
+    pageNumber: userPageNumber,
+    pageSize: userPageSize,
+    onPageChange(pageNumber) {
+      dispatch({
+        type: 'devices/usersQuery',
+        payload: { field, keyword, pageNumber },
+      });
+    },
+    onSelect(data) {
+      dispatch({
+        type: 'devices/userSelected',
+        payload: {
+          user_id: data.id,
+          user_name: data.name,
+        }
+      });
+    },
+    onCancel() {
+      dispatch({
+        type: 'devices/hideUserSelectModal',
+      });
+    }
+  };
+  
+  UserSelect.js如下：
+  const UserSelect = ({
+    visible,
+    list,
+    totalRow, pageNumber, pageSize,
+    onSelect,
+    onCancel,
+    onPageChange,
+  }) => {
+
+    const userList = list.map(item =>
+      <Col span={4} className={styles.col} key={item.id}>
+        <Button type="ghost" onClick={() => onSelect(item)}>
+          <img src={item.avatar || avatar} className={styles.avatar}></img>
+          <div>{item.name}</div>
+        </Button>
+      </Col>
+    );
+
+    function pagination() {
+      return <Pagination total={totalRow}
+        current={pageNumber} pageSize={pageSize} onChange={onPageChange} />;
+    }
+
+    const modalOpts = {
+      visible,
+      title: '选择用户',
+      onCancel,
+      footer: pagination(),
+      width: 800,
+    };
+
+    return (
+      <Modal {...modalOpts}>
+        <Row gutter={16} type="flex">
+            {userList}
+        </Row>
+      </Modal>
+    );
+};
+	
+	
+	devices的effects中的userSelected方法如下：
+	*userSelected({ payload }, { call, put }) {
+      yield put({ type: 'hideUserSelectModal' });
+      yield put({
+        type: 'updateCurrentItem',
+        payload: {
+          currentItem: { ...payload },
+        }
+      });
+      const { status_code, data } = yield call(poolsQuery, { user_id: payload.user_id });
+      if (status_code === 0 && data) {
+        yield put({
+          type: 'queryPoolsSuccess',
+          payload: {
+            poolList: data.list,
+          }
+        });
+      }
+      yield put({
+        type: 'showModal',
+        payload: {
+          modalType: 'create',
+        }
+      });
+    },
+   }
+   
+   reducers的udateCurrentItem方法如下：
+    updateCurrentItem(state, action) {
+      return { ...state, ...action.payload };
+    },
+	
+   主要看onSelect方法，调用的时候是传递了  payload: {user_id: data.id, user_name: data.name,} 过去的，而在userSelected方法中
+   又updateCurrentItem，这里执行完之后，currentItem状态由原来的{},变成{user_id:xxx, user_name: xxx}，这有点取巧，如果是编辑
+   设备的时候，改变这个currentItem好像有点不妥，但是添加设备的时候就无所谓了。（本案例编辑设备的时候不允许更换User，所以没有这个问题）。
+
+  
+  devices.js的effects中的createDevice 和 usersQuery方法如下：
+	*createDevice({ payload }, { call, put }) {
+	  yield put({ type: 'showUserSelectModal' });
+	  yield put({ type: 'usersQuery' });
+	}
+    *usersQuery({ payload }, { select, call, put }) {
+	  const pageSize = yield select(({ devices }) => devices.userPageSize);
+	  const param = { ...payload, pageSize };
+	  const { data, status_code } = yield call(usersQuery, parse(param));
+	  if (status_code === 0 && data) {
+		yield put({
+		  type: 'queryUsersSuccess',
+		  payload: {
+			userList: data.list,
+			userTotalRow: data.totalRow,
+			userPageNumber: data.pageNumber,
+		  }
+		});
+	  }
+	}
+	
+	reducers的showUserSelectModal 和 queryUsersSuccess方法如下：
+	showUserSelectModal(state, action) {
+      return { ...state, userSelectModalVisible: true };
+    },
+	queryUsersSuccess(state, action) {
+      return { ...state, ...action.payload };
+    }
+	#待：const pageSize = yield select(({ devices }) => devices.userPageSize); 这里的yield select有什么用？
+	
+
+ 
+（3）当点击一个“编辑”按钮的时候，发生什么事情？
 	Device.js传给DeviceList.js的onEditItem方法如下：
 	onEditItem(currentItem) {
 	  dispatch({
@@ -78,7 +245,8 @@
 	
 	可见，先是更新currentItem状态，然后查询该用户的塘口，当查询成功，就更新poolList状态，最后更新modal状态，显示这个编辑Modal
 	
-（3）由（2）可知，此时poolList状态已经加载了pool列表了，来看看 DeviceModal.js中关于生成代表所有可选塘口的<Select>组件的代码：
+（4）加载完poolList之后，怎样生成代表所有可选塘口的<Select>组件？
+	由（2）可知，此时poolList状态已经加载了pool列表了，来看看 DeviceModal.js中关于生成代表所有可选塘口的<Select>组件的代码：
 	const renderPoolList = poolList.map(item =>
       <Option value={item.id} key={item.id}>{item.name}</Option>
     );
@@ -111,6 +279,8 @@
 	  </Modal>
   
     #待？为什么initialValue要用 poolListDefaultValue(poolList, item.pool_id) 而不直接用 item.pool_id
+
+
 
  
  
